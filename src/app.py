@@ -1,4 +1,3 @@
-from urllib import response
 from flask import Flask,jsonify, request
 from flask_pymongo import PyMongo
 from flask_mysqldb import MySQL
@@ -124,7 +123,7 @@ def updatesql(id):
 
 
 def error_404(error):
-    return jsonify({"message": "Resource not Found"})
+    return " 404 Resource not Found"
 
 
 if __name__ == "__main__":
