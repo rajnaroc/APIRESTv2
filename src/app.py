@@ -83,7 +83,7 @@ def addmysql():
         return jsonify({"usuario": {"nombre": nombre,"color":color, "edad": edad, "numero": numero }})
     return jsonify({"message": "error al insertar datos"})
 
-@app.route('/userssql')
+@app.route('/userssql', methods=["GET"])
 def userssql():
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM users")
