@@ -1,15 +1,23 @@
 from flask import Flask,jsonify, request
+from flask.cli import load_dotenv
 from flask_pymongo import PyMongo
 from flask_mysqldb import MySQL
 from bson import ObjectId
-from config import config
 import os
+
+load_dotenv()
 
 app = Flask(__name__)
 
-mysql = MySQL(app)
 
 app.config["MONGO_URI"] = "mongodb+srv://rajnaroc:12345@cluster0.r5gm8.mongodb.net/users"
+
+app.config["MYSQL_HOST"]="b68fttvw3vrzskmx10ds-mysql.services.clever-cloud.com"
+app.config["MYSQL_USER"]="usrftefhmotkb5ao"
+app.config["MYSQL_PASSWORD"]="KRYZo60SCwVTgcYoijxx"
+app.config["MYSQL_DB"]="b68fttvw3vrzskmx10ds"
+
+mysql = MySQL(app)
 
 mongo = PyMongo(app)
 
@@ -47,7 +55,7 @@ def usersmongo():
 def usermongo(id):
     users = mongo.db.users.find({"_id": ObjectId(id)})
     if users:
-        return jsonify(users)
+        return jsonify({users})
     
 @app.route('/deletemongo/<id>', methods=["DELETE"])
 def deletemongo(id):
@@ -55,7 +63,7 @@ def deletemongo(id):
     
     return jsonify({"message" : "elimando el" + id})
 
-@app.route('/update/<id>')
+@app.route('/update/<id>', methods=["PUT"])
 def updatemongo(id):
     nombre = request.json["nombre"]
     color = request.json["color"]
@@ -69,7 +77,8 @@ def updatemongo(id):
         "numero" : numero
     }})
     
-    return jsonify(user)
+    return jsonify({user})
+
 @app.route('/addsql', methods=["POST"])
 def addmysql():
     nombre = request.json["nombre"]
@@ -127,6 +136,5 @@ def error_404(error):
 
 
 if __name__ == "__main__":
-    app.config.from_object(config["dev"])
     app.register_error_handler(404,error_404)
-    app.run()
+    app.run(debug=True,host="0.0.0.0")
